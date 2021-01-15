@@ -31,7 +31,7 @@
 .clear {
   clear: both;
 }
-#reset-container,
+.reset-container,
 h1 {
   text-align: center;
 }

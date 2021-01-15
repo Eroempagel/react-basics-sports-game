@@ -32,10 +32,45 @@
       function App(props) {
         return (
           <div className="App">
+            <Music />
             <h1>Welcome to React Basics Sports Game!</h1>
             <Game venue={"Archery Challenge!"} />
           </div>
         );
+      }
+
+      // lets do sound?
+      class Music extends React.Component {
+        constructor(props) {
+          super(props);
+
+          this.state = {
+            play: false,
+          };
+
+          // background music
+          this.myMusic = new Audio("assets/audio/practice.mp3");
+        }
+        handleMusic = (event) =>
+          this.setState(
+            {
+              play: !this.state.play,
+            },
+            () => {
+              this.state.play ? this.myMusic.play() : this.myMusic.pause();
+            }
+          );
+
+        render() {
+          return (
+            <div>
+              <span>Background Music: </span>
+              <button onClick={this.handleMusic}>
+                {this.state.play ? "Pause" : "Play"}
+              </button>
+            </div>
+          );
+        }
       }
 
       // A Game component that accepts a venue name as a prop.
@@ -52,9 +87,9 @@
               </div>
               <div className="center">
                 <span>
-                  <img src="assets/images/goron.png" />
-                  <img src="assets/images/goron.png" />
-                  <img src="assets/images/goron.png" />
+                  <img height="160px" src="assets/images/goron.png" />
+                  <img height="160px" src="assets/images/goron.png" />
+                  <img height="160px" src="assets/images/goron.png" />
                 </span>
               </div>
               <div className="right">
