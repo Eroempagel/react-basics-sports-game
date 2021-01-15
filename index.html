@@ -32,8 +32,6 @@
       function App(props) {
         return (
           <div className="App">
-            <Music />
-            <h1>Welcome to React Basics Sports Game!</h1>
             <Game venue={"Archery Challenge!"} />
           </div>
         );
@@ -77,6 +75,7 @@
       function Game(props) {
         return (
           <div className="Game">
+            <Music />
             <h1>Welcome to {props.venue}</h1>
             <div className="cards">
               <div className="left">
