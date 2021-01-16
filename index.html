@@ -162,9 +162,38 @@
                 </button>
               </div>
               <h1>Welcome to {this.props.venue}</h1>
+              <div className="container">
+                <div className="scoreContainer">
+                  <div className="scoreboard">
+                    <div className="home">
+                      <strong>Home </strong>
+                      <div>
+                        <strong>Shots: </strong>
+                        {this.state.teamOneShots}
+                      </div>
+                      <div>
+                        <strong>Score: </strong>
+                        {this.state.teamOneScore}
+                      </div>
+                    </div>
+                    <div className="visitors">
+                      <strong>Visitors </strong>
+                      <div>
+                        <strong>Shots: </strong>
+                        {this.state.teamTwoShots}
+                      </div>
+                      <div>
+                        <strong>Score: </strong>
+                        {this.state.teamTwoScore}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="cards">
                 <div className="left">
                   <Team
+                    homeAway={"Home"}
                     name={"Team One"}
                     logo={"assets/images/linkwithbow.jpg"}
                     shots={this.state.teamOneShots}
@@ -183,6 +212,7 @@
                 </div>
                 <div className="right">
                   <Team
+                    homeAway={"Visitors"}
                     name={"Team Two"}
                     logo={"assets/images/linkwithcrossbow.jpg"}
                     shots={this.state.teamTwoShots}
@@ -211,8 +241,11 @@
         }
         return (
           <div>
+            <div className="Home-Away">
+              <h2>{props.homeAway}</h2>
+            </div>
             <div className="Team">
-              <h2>{props.name}</h2>
+              <h3>{props.name}</h3>
             </div>
             <div className="TeamLogo">
               <img height="180px" src={props.logo} alt={props.name} />
