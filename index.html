@@ -48,12 +48,20 @@
             teamOneScore: 0,
             teamTwoScore: 0,
             score: 0,
+            resetCount: 0,
+            play: false,
           };
           // sound of arrow shooting
           this.mySound1 = new Audio("assets/audio/arrow.mp3");
 
           // sound of arrow hitting
           this.mySound2 = new Audio("assets/audio/arrow-wall.mp3");
+
+          // sound of a win
+          this.mySound3 = new Audio("assets/audio/win.wav");
+
+          // background music
+          this.myMusic = new Audio("assets/audio/practice.mp3");
         }
 
         handleTeamOneShots = (event) => {
@@ -67,7 +75,7 @@
           }
           if (this.state.teamOneShots < 10) {
             this.setState((state, props) => ({
-              teamOneShots: state.teamOneShots + 1,
+              teamOneShots: this.state.teamOneShots + 1,
               teamOneScore,
             }));
           }
@@ -84,22 +92,33 @@
           }
           if (this.state.teamTwoShots < 10) {
             this.setState((state, props) => ({
-              teamTwoShots: state.teamTwoShots + 1,
+              teamTwoShots: this.state.teamTwoShots + 1,
               teamTwoScore,
             }));
           }
         };
+
+        handleMusic = (event) =>
+          this.setState(
+            {
+              play: !this.state.play,
+            },
+            () => {
+              this.state.play ? this.myMusic.play() : this.myMusic.pause();
+            }
+          );
 
         handleReset = (event) => {
           this.setState((state, props) => ({
             teamOneShots: 0,
             teamTwoShots: 0,
             shots: 0,
+            teamOneScore: 0,
+            teamTwoScore: 0,
             score: 0,
+            resetCount: this.state.resetCount + 1,
+            play: this.myMusic.pause("Pause"),
           }));
-
-          // sound of a win
-          this.mySound3 = new Audio("assets/audio/win.wav");
 
           if (this.state.teamOneScore > this.state.teamTwoScore) {
             alert("Team One Wins!");
@@ -130,9 +149,18 @@
           return (
             <div className="Game">
               <div className="reset-container">
+                <div>
+                  <strong>Number of Resets: </strong>
+                  {this.state.resetCount}
+                </div>
                 <button onClick={this.handleReset}>Reset</button>
               </div>
-              <Music />
+              <div>
+                <span>Background Music: </span>
+                <button onClick={this.handleMusic}>
+                  {this.state.play ? "Pause" : "Play"}
+                </button>
+              </div>
               <h1>Welcome to {this.props.venue}</h1>
               <div className="cards">
                 <div className="left">
@@ -201,40 +229,6 @@
             <button onClick={props.handler}>{props.buttonName}</button>
           </div>
         );
-      }
-
-      // lets do sound?
-      class Music extends React.Component {
-        constructor(props) {
-          super(props);
-
-          this.state = {
-            play: false,
-          };
-
-          // background music
-          this.myMusic = new Audio("assets/audio/practice.mp3");
-        }
-        handleMusic = (event) =>
-          this.setState(
-            {
-              play: !this.state.play,
-            },
-            () => {
-              this.state.play ? this.myMusic.play() : this.myMusic.pause();
-            }
-          );
-
-        render() {
-          return (
-            <div>
-              <span>Background Music: </span>
-              <button onClick={this.handleMusic}>
-                {this.state.play ? "Pause" : "Play"}
-              </button>
-            </div>
-          );
-        }
       }
 
       // Render the App
