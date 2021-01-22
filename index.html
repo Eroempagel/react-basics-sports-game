@@ -30,9 +30,39 @@
     <script type="text/babel">
       // An App component under which all other components will be added
       function App(props) {
+        const blueTeam = {
+          name: "Blue Tunic Link",
+          logoSrc: "./assets/images/linkwithbow.jpg",
+        };
+
+        const greenTeam = {
+          name: "Green Tunic Link",
+          logoSrc: "./assets/images/linkwithcrossbow.jpg",
+        };
+
+        const revaliArchers = {
+          name: "Revali Archer",
+          logoSrc: "./assets/images/revaliwithbow.jfif",
+        };
+
+        const hyrulianArchers = {
+          name: "Hyrulian Archer",
+          logoSrc: "./assets/images/hyrulianarcher.jpg",
+        };
+
         return (
           <div className="App">
-            <Game venue={"Archery Challenge!"} />
+            <BgMusic />
+            <Game
+              venue="Link's Archery Challenge"
+              homeTeam={greenTeam}
+              visitingTeam={blueTeam}
+            />
+            <Game
+              venue="Hyrulian Warriors Arena"
+              homeTeam={revaliArchers}
+              visitingTeam={hyrulianArchers}
+            />
           </div>
         );
       }
@@ -42,185 +72,119 @@
           super(props);
 
           this.state = {
-            teamOneShots: 0,
-            teamTwoShots: 0,
-            shots: 0,
-            teamOneScore: 0,
-            teamTwoScore: 0,
-            score: 0,
             resetCount: 0,
-            play: false,
+            homeTeamStats: {
+              shots: 0,
+              score: 0,
+            },
+            visitingTeamStats: {
+              shots: 0,
+              score: 0,
+            },
           };
-          // sound of arrow shooting
-          this.mySound1 = new Audio("assets/audio/arrow.mp3");
 
-          // sound of arrow hitting
-          this.mySound2 = new Audio("assets/audio/arrow-wall.mp3");
-
-          // sound of a win
-          this.mySound3 = new Audio("assets/audio/win.wav");
-
-          // background music
-          this.myMusic = new Audio("assets/audio/practice.mp3");
+          this.shotSound = new Audio("./assets/audio/arrow.mp3");
+          this.scoreSound = new Audio("./assets/audio/arrow-wall.mp3");
+          this.winSound = new Audio("./assets/audio/win.wav");
         }
 
-        handleTeamOneShots = (event) => {
-          let teamOneScore = this.state.teamOneScore;
-          this.mySound1.play();
-          if (Math.floor(Math.random() * (10 - 0) + 1) % 2 == 0) {
-            teamOneScore += 1;
+        shoot = (team) => {
+          const teamStatsKey = `${team}TeamStats`;
+          let score = this.state[teamStatsKey].score;
+          this.shotSound.play();
+
+          if (Math.random() > 0.5) {
+            score += 1;
+
             setTimeout(() => {
-              this.mySound2.play();
+              this.scoreSound.play();
             }, 100);
           }
-          if (this.state.teamOneShots < 10) {
-            this.setState((state, props) => ({
-              teamOneShots: this.state.teamOneShots + 1,
-              teamOneScore,
-            }));
-          }
-        };
 
-        handleTeamTwoShots = (event) => {
-          let teamTwoScore = this.state.teamTwoScore;
-          this.mySound1.play();
-          if (Math.floor(Math.random() * (10 - 0) + 1) % 2 == 0) {
-            teamTwoScore += 1;
-            setTimeout(() => {
-              this.mySound2.play();
-            }, 100);
-          }
-          if (this.state.teamTwoShots < 10) {
-            this.setState((state, props) => ({
-              teamTwoShots: this.state.teamTwoShots + 1,
-              teamTwoScore,
-            }));
-          }
-        };
-
-        handleMusic = (event) =>
-          this.setState(
-            {
-              play: !this.state.play,
-            },
-            () => {
-              this.state.play ? this.myMusic.play() : this.myMusic.pause();
-            }
-          );
-
-        handleReset = (event) => {
           this.setState((state, props) => ({
-            teamOneShots: 0,
-            teamTwoShots: 0,
-            shots: 0,
-            teamOneScore: 0,
-            teamTwoScore: 0,
-            score: 0,
-            resetCount: this.state.resetCount + 1,
-            play: this.myMusic.pause("Pause"),
+            [teamStatsKey]: {
+              shots: state[teamStatsKey].shots + 1,
+              score,
+            },
           }));
+        };
 
-          if (this.state.teamOneScore > this.state.teamTwoScore) {
+        resetGame = () => {
+          this.setState((state, props) => ({
+            resetCount: state.resetCount + 1,
+            homeTeamStats: {
+              shots: 0,
+              score: 0,
+            },
+            visitingTeamStats: {
+              shots: 0,
+              score: 0,
+            },
+          }));
+          if (
+            this.state.visitingTeamStats.score > this.state.homeTeamStats.score
+          ) {
             alert("Team One Wins!");
-            this.mySound3.play();
-          } else if (this.state.teamTwoScore > this.state.teamOneScore) {
+            this.winSound.play();
+          } else if (
+            this.state.homeTeamStats.score > this.state.visitingTeamStats.score
+          ) {
             alert("Team Two Wins!");
-            this.mySound3.play();
+            this.winSound.play();
           } else {
             alert("It's a Tie!");
-            this.mySound3.play();
+            this.winSound.play();
           }
         };
 
         render() {
-          let shotPercentageDiv;
-
-          if (this.state.shots) {
-            const shotPercentage = Math.floor(
-              (this.state.score / this.state.shots) * 100
-            );
-            shotPercentageDiv = (
-              <div>
-                <strong>Shooting %: </strong>
-                {shotPercentage}
-              </div>
-            );
-          }
           return (
             <div className="Game">
-              <div className="reset-container">
-                <div>
-                  <strong>Number of Resets: </strong>
-                  {this.state.resetCount}
-                </div>
-                <button onClick={this.handleReset}>Reset Game</button>
-              </div>
-              <div>
-                <span>Background Music: </span>
-                <button onClick={this.handleMusic}>
-                  {this.state.play ? "Pause" : "Play"}
-                </button>
-              </div>
+              <ScoreBoard
+                visitingTeamStats={this.state.visitingTeamStats}
+                homeTeamStats={this.state.homeTeamStats}
+              />
+
               <h1>Welcome to {this.props.venue}</h1>
-              <div className="container">
-                <div className="scoreContainer">
-                  <div className="scoreboard">
-                    <div className="home">
-                      <strong>Home </strong>
-                      <div>
-                        <strong>Shots: </strong>
-                        {this.state.teamOneShots}
-                      </div>
-                      <div>
-                        <strong>Score: </strong>
-                        {this.state.teamOneScore}
-                      </div>
-                    </div>
-                    <div className="visitors">
-                      <strong>Visitors </strong>
-                      <div>
-                        <strong>Shots: </strong>
-                        {this.state.teamTwoShots}
-                      </div>
-                      <div>
-                        <strong>Score: </strong>
-                        {this.state.teamTwoScore}
-                      </div>
-                    </div>
+              <div className="stats">
+                <Team
+                  name={this.props.visitingTeam.name}
+                  logo={this.props.visitingTeam.logoSrc}
+                  stats={this.state.visitingTeamStats}
+                  shotHandler={() => this.shoot("visiting")}
+                />
+
+                <div className="versus">
+                  <span>
+                    <img
+                      height="160px"
+                      src={"./assets/images/goron.png"}
+                      alt="goron holding a target"
+                    />
+                    <img
+                      height="160px"
+                      src={"./assets/images/goron.png"}
+                      alt="goron holding a target"
+                    />
+                    <img
+                      height="160px"
+                      src={"./assets/images/goron.png"}
+                      alt="goron holding a target"
+                    />
+                  </span>
+
+                  <div>
+                    <strong>Resets:</strong> {this.state.resetCount}
+                    <button onClick={this.resetGame}>Reset Game</button>
                   </div>
                 </div>
-              </div>
-              <div className="cards">
-                <div className="left">
-                  <Team
-                    homeAway={"Home"}
-                    name={"Team One"}
-                    logo={"assets/images/linkwithbow.jpg"}
-                    shots={this.state.teamOneShots}
-                    score={this.state.teamOneScore}
-                    handler={this.handleTeamOneShots}
-                    buttonName={"Team One Shoot!"}
-                  />
-                </div>
 
-                <div className="center">
-                  <span>
-                    <img height="160px" src="assets/images/goron.png" />
-                    <img height="160px" src="assets/images/goron.png" />
-                    <img height="160px" src="assets/images/goron.png" />
-                  </span>
-                </div>
-                <div className="right">
-                  <Team
-                    homeAway={"Visitors"}
-                    name={"Team Two"}
-                    logo={"assets/images/linkwithcrossbow.jpg"}
-                    shots={this.state.teamTwoShots}
-                    score={this.state.teamTwoScore}
-                    handler={this.handleTeamTwoShots}
-                    buttonName={"Team Two Shoot!"}
-                  />
-                </div>
+                <Team
+                  name={this.props.homeTeam.name}
+                  logo={this.props.homeTeam.logoSrc}
+                  stats={this.state.homeTeamStats}
+                  shotHandler={() => this.shoot("home")}
+                />
               </div>
             </div>
           );
@@ -230,38 +194,88 @@
       function Team(props) {
         let shotPercentageDiv;
 
-        if (props.shots) {
-          const shotPercentage = Math.floor((props.score / props.shots) * 100);
+        if (props.stats.shots) {
+          const shotPercentage = Math.round(
+            (props.stats.score / props.stats.shots) * 100
+          );
           shotPercentageDiv = (
             <div>
-              <strong>Shooting %: </strong>
-              {shotPercentage}
+              <strong>Shooting %: {shotPercentage}</strong>
             </div>
           );
         }
+
         return (
-          <div>
-            <div className="Home-Away">
-              <h2>{props.homeAway}</h2>
+          <div className="Team">
+            <h2>{props.name}</h2>
+
+            <div className="identity">
+              <img src={props.logo} alt={props.name} />
             </div>
-            <div className="Team">
-              <h3>{props.name}</h3>
-            </div>
-            <div className="TeamLogo">
-              <img height="180px" src={props.logo} alt={props.name} />
-            </div>
+
             <div>
-              <strong>Shots: </strong>
-              {props.shots}
+              <strong>Shots:</strong> {props.stats.shots}
             </div>
+
             <div>
-              <strong>Score: </strong>
-              {props.score}
+              <strong>Score:</strong> {props.stats.score}
             </div>
+
             {shotPercentageDiv}
-            <button onClick={props.handler}>{props.buttonName}</button>
+
+            <button onClick={props.shotHandler}>Shoot!</button>
           </div>
         );
+      }
+
+      function ScoreBoard(props) {
+        return (
+          <div className="ScoreBoard">
+            <div className="teamStats">
+              <h3>VISITORS</h3>
+              <h3>{props.visitingTeamStats.score}</h3>
+            </div>
+
+            <h3>SCOREBOARD</h3>
+
+            <div className="teamStats">
+              <h3>HOME</h3>
+              <h3>{props.homeTeamStats.score}</h3>
+            </div>
+          </div>
+        );
+      }
+
+      class BgMusic extends React.Component {
+        constructor(props) {
+          super(props);
+
+          this.state = {
+            play: false,
+          };
+          this.myMusic = new Audio("./assets/audio/practice.mp3");
+        }
+        handleMusic = (event) =>
+          this.setState(
+            {
+              play: !this.state.play,
+            },
+            () => {
+              this.state.play ? this.myMusic.play() : this.myMusic.pause();
+            }
+          );
+        render() {
+          return (
+            <div>
+              <span>
+                <strong>Background Music: </strong>
+              </span>
+              <button className="BgMusic" onClick={this.handleMusic}>
+                {this.state.play ? "Pause" : "Play"}
+              </button>
+            </div>
+          );
+        }
       }
 
       // Render the App

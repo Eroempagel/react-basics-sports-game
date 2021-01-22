@@ -1,5 +1,103 @@
-.hide {
-  display: none;
+@import url("https://fonts.googleapis.com/css?family=Oswald");
+@font-face {
+  font-family: "Score Board";
+  src: url("https://cdn.jsdelivr.net/gh/dteirney/trains.maxx.co.nz/fonts/scoreboard/scoreboard-webfont.eot");
+  src: url("https://cdn.jsdelivr.net/gh/dteirney/trains.maxx.co.nz/fonts/scoreboard/scoreboard-webfont.eot")
+      format("embedded-opentype"),
+    url("https://cdn.jsdelivr.net/gh/dteirney/trains.maxx.co.nz/fonts/scoreboard/scoreboard-webfont.woff")
+      format("woff"),
+    url("https://cdn.jsdelivr.net/gh/dteirney/trains.maxx.co.nz/fonts/scoreboard/scoreboard-webfont.ttf")
+      format("truetype"),
+    url("https://cdn.jsdelivr.net/gh/dteirney/trains.maxx.co.nz/fonts/scoreboard/scoreboard-webfont.svg")
+      format("svg");
+}
+
+html * {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Oswald", sans-serif;
+  background-color: beige;
+}
+
+.ScoreBoard {
+  display: flex;
+  justify-content: center;
+  font-family: "Score Board", sans-serif;
+  text-align: center;
+  background: #2c2c2c;
+  color: #73fd49;
+  text-shadow: 0 0 3px #fd8049;
+  padding: 1rem 0;
+}
+
+.ScoreBoard h3 {
+  margin: 0;
+}
+
+.ScoreBoard .teamStats {
+  flex: 1;
+}
+
+.Game {
+  text-align: center;
+}
+
+.Team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 30rem;
+}
+
+.Team .identity {
+  height: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Team img {
+  height: 180px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.versus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+  color: white;
+  background-color: rgb(7, 80, 17);
+  border: 0;
+  border-radius: 10px;
+  font-family: Oswald, sans-serif;
+  text-transform: uppercase;
+  font-size: 1.2em;
+  box-shadow: 2px 2px 0 black;
+}
+.BgMusic {
+  display: inline;
+  width: 6%;
+  padding: 2px;
+  margin-bottom: 1rem;
 }
 .cards {
   margin: 20px;
@@ -30,63 +128,4 @@
 }
 .clear {
   clear: both;
-}
-.reset-container,
-h1 {
-  text-align: center;
-}
-body {
-  width: 100%;
-}
-#teamone {
-  height: 180px;
-}
-#teamtwo {
-  height: 180px;
-}
-body {
-  background-color: beige;
-}
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.scoreContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.scoreboard {
-  border: 2px solid white;
-  border-radius: 10px;
-  background-color: darkgreen;
-  color: white;
-  width: 146px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
-  padding: 5px;
-}
-.home {
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  align-items: left;
-  text-align: left;
-  padding: 5px;
-}
-.visitors {
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  align-items: left;
-  text-align: left;
-  padding: 5px;
 }
